@@ -21,8 +21,10 @@ def first_type_penalty (matrix): #same color modules in row or column >= 5 add i
         for j in range (1, n):
             if matrix[i][j] == matrix[i][j - 1]:
                 streak += 1
-            elif streak >= 5:
-                penalty += streak
+                if streak >= 5:
+                    penalty += streak
+                    streak = 1
+            else:
                 streak = 1
 
 
