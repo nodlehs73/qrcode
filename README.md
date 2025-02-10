@@ -185,7 +185,7 @@ Funcționarea procesului:
 
 ### Generare cod QR normal
 ```bash
-python3 qrcode.py generate_normal [message] [error_correction_level] [file_path]
+python3 qr_code.py generate_normal [message] [error_correction_level] [file_path]
 ```
   - Message este textul pe care doriți să-l codificați în QR.
   - Error_correction_level poate fi unul dintre: L, M, Q, H (nivelul de corecție al erorilor în QR).
@@ -193,7 +193,7 @@ python3 qrcode.py generate_normal [message] [error_correction_level] [file_path]
 
 ### Generare coduri QR folosind structured append
 ```bash
-python3 qrcode.py generate_structured_append [message] [error_correction_level] [number_of_splits]
+python3 qr_code.py generate_structured_append [message] [error_correction_level] [number_of_splits]
 ```
   - Message este textul pe care doriți să-l codificați.
   - Error_correction_level poate fi: L, M, Q, H.
@@ -202,13 +202,13 @@ python3 qrcode.py generate_structured_append [message] [error_correction_level] 
 
 ### Citire cod QR normal
 ```bash
-python3 qrcode.py normal_read [path_qr_code]
+python3 qr_code.py normal_read [path_qr_code]
 ```
   - path_qr_code este calea către fișierul imagine care conține codul QR de citit (ex. qrcode.png).
 
 ### Citire cod QR folosind structured_append
 ```bash
-python3 qrcode.py structured_append_read
+python3 qr_code.py structured_append_read
 ```
 Această comandă citește automat toate imaginile din folderul **photos** și asamblează mesajul dacă acesta este împărțit în mai multe coduri QR.
 
