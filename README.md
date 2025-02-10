@@ -181,7 +181,7 @@ Funcționarea procesului:
 ---
 
 ## Cum se foloseste programul ?
-### Cu ajutorul fisierului **qr_code.py** putem rula programul. Acest fisier asista la executarea codului prin intermediul terminalului.
+### Cu ajutorul fisierului **qr_code.py** putem rula programul. Acest fisier asista la generarea/citirea codurilor QR prin intermediul terminalului.
 
 ### Generare cod QR normal
 ```bash
