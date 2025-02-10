@@ -22,7 +22,7 @@ Acest proiect este o aplicație completă pentru generarea și decodarea coduril
 
 ### 3. **Decodare Coduri QR**
 - Programul poate decoda atât coduri QR standard, cât și cele generate cu **structured append**.
-- La detectarea mai multor coduri QR cu structured append, aplicația le reordonează automat, verifică paritatea și reconstituie mesajul inițial.
+- La detectarea mai multor coduri QR cu structured append, aplicația le reordonează, verifică paritatea și reconstituie mesajul inițial.
 
 ## **Functionalitati ale fiecarui fisier**
 
@@ -39,7 +39,7 @@ Acestea sunt citite din format string-ul stocat în matricea QR.
 
 
 ### 1.2. Anularea măștii aplicate
-Pe baza valorii `mask_pattern`, matricea QR este readusă la forma inițială. Aceasta implică inversarea modulelor specificate, pentru a putea decoda corect datele.
+Pe baza valorii `mask_pattern`, matricea QR este readusă la forma inițială. Aceasta implică inversarea unora dinte module printr-un XOR, pentru a putea decoda corect datele.
 
 
 ### 1.3. Extracția datelor codificate
@@ -69,7 +69,7 @@ Programul citește informațiile esențiale din format string-ul codului QR, cum
 - **Masca aplicată**
 
 ### 2.2. Anularea măștii aplicate
-Pe baza valorii `mask_pattern`, matricea QR este readusă la forma inițială, prin inversarea modulelor specifice. Acest pas este necesar pentru a decoda corect datele.
+Pe baza valorii `mask_pattern`, matricea QR este readusă la forma inițială, prin inversarea unora dintre module printr-un XOR. Acest pas este necesar pentru a decoda corect datele.
 
 ### 2.3. Extracția datelor codificate
 Programul parcurge matricea QR pentru a extrage datele intercalate (`data codewords`). Acestea sunt organizate într-o matrice de mesaje și citite secvențial.
@@ -97,15 +97,15 @@ Programul gestionează automat corecția erorilor, alegerea celei mai bune măș
 Funcția `generate_format_string` generează un string de format care conține nivelul de corecție a erorilor și masca selectată pentru QR. Acest string este inserat în matricea QR.
 
 ### 3.2. Corecția erorilor cu coduri Reed-Solomon
-Pentru fiecare bloc de date, programul generează `error codewords` folosind algoritmul **Reed-Solomon (`RSCodec`)**. Această corecție permite recuperarea datelor în cazul deteriorării parțiale a codului QR.
+Pentru fiecare bloc de date, programul generează `error codewords` folosind algoritmul **Reed-Solomon**. Această corecție permite recuperarea datelor în cazul deteriorării parțiale a codului QR.
 
 
 ### 3.3. Alegerea celei mai bune măști  
-Funcțiile din fișierul `best_mask` aplică opt măști posibile pe matricea QR. Se calculează penalități (`total_penalty`), iar masca cu cea mai mică penalitate este selectată automat.
+Funcțiile din fișierul `best_mask` aplică opt măști posibile pe matricea QR. Se calculează penalități (`total_penalty`), iar masca cu cea mai mică penalitate este selectată.
 
 
 ### 3.4. Generarea unui cod QR individual
-Funcția `get_single_qr_code` procesează un mesaj unic, transformându-l în blocuri de date și aplicând corecția erorilor. Codul QR este generat și salvat ca imagine.
+Funcția `get_single_qr_code` procesează un mesaj, transformându-l în blocuri de date și aplicând corecția erorilor. Codul QR este generat și salvat ca imagine PNG.
 
 
 ### 3.5. Generarea codurilor QR structurale ("structured append")
@@ -119,9 +119,10 @@ Această funcție `transformare` encodează mesajul într-un format compatibil p
 
 ### 4.1. Adăugarea header-ului de structured append (opțional)
 Dacă este activată opțiunea `structured_append`, funcția adaugă un header care conține următoarele informații:
-- **Poziția codului QR în secvență**  
-- **Numărul total de coduri QR din secvență**  
-- **Paritatea mesajului**
+- **Codul encodarii (0011)**
+- **Poziția codului QR în secvență (4 bits)**  
+- **Numărul total de coduri QR din secvență (4 bits)**  
+- **Paritatea mesajului (8 bits)**
 
 
 ### 4.2. Specificarea modului de codificare
@@ -140,14 +141,13 @@ Fiecare caracter din mesaj este convertit într-o secvență binară de 8 biți 
 
 ### 4.5. Completarea fluxului de date
 Funcția adaugă date suplimentare pentru a respecta cerințele codului QR:
-- Adaugă un minim de 4 biți `0` dacă fluxul nu este complet  
+- Adaugă un minim de 4 biți `0` dacă fluxul nu este complet
+- Adauga biti de 0 pana cand numarul de biti introdusi pana acum in matrice este multiplu 8
 - Completează fluxul cu secvențe alternante `11101100` și `00010001` până când atinge dimensiunea necesară în funcție de versiunea și nivelul de corecție a erorilor
 
 
 ### 4.6. Împărțirea în blocuri de date
 După generarea fluxului complet de date, funcția împarte datele în blocuri, conform specificațiilor QR pentru versiunea și nivelul de corecție a erorilor:
-- **Primul grup de blocuri** – conține un număr specific de blocuri și codewords  
-- **Al doilea grup de blocuri** (dacă există) – poate conține mai puține blocuri și codewords  
 
 ---
 
